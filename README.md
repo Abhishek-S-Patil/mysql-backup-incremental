@@ -63,9 +63,10 @@ DBPASSWORD       | Password to access the MySQL server e.g. password            
 DBHOST           | Host name (or IP address) of MySQL server e.g localhost                     | DBHOST="127.0.0.1"
 DUMPBACKUPDIR    | Backup directory location for MySqlDumps e.g /backups                       | DUMPBACKUPDIR="/var/lib/mysql"
 BLOGSBACKUPDIR   | Backup directory location for MySqlDumps e.g /backups                       | BLOGSBACKUPDIR="/var/log/mysql"
-RESTOREBACKUPDIR | Restore directory location for MySqlDumps and Binary Files                  | RESTOREBACKUPDIR="~/sqlbackups
+RESTOREBACKUPDIR | Restore directory location for MySqlDumps and Binary Log Files              | RESTOREBACKUPDIR="~/sqlbackups"
+BINFILENAME      | Binary Log File name                                                        | BINFILENAME="mysql-binlog"
 
-### Running the script
+### Running the script 
 
 There are two methods to run this script, One is to run with cron jobs and other is to execute within terminal.
 > Note: Make sure file has executable permissions.
@@ -73,19 +74,25 @@ There are two methods to run this script, One is to run with cron jobs and other
 #### Executing in terminal
 
 ```sh
-$ ./mysqlbinlog.sh  
+$ ./mysqlbackup.sh  
 ```
-This command runs the script in normal mode. If the *"full backup"* Day matches the *“DUMPDAY”* field, then full backup will ve perfromed otherwise binary logs will be updated.
+This command runs the script in normal mode with default parameters (unless user has set them inside script file). If the *"full backup"* Day matches the *“DUMPDAY”* field, then full backup will ve perfromed otherwise binary logs will be updated.
 
 ```sh
-$ ./mysqlbinlog.sh dump 
+$ ./mysqlbackup.sh -c dump 
 ```
 This command explicitly provides “dump” as argument to force full backup.
 
 ```sh
-$ ./mysqlbinlog.sh restore 
+$ ./mysqlbackup.sh -c restore 
 ```
 This command explicitly provides “restore” as argument to run the program in restoring mode.
+
+You can explicitly provide all parameters rather than setting inside script file. please type and follow following command.
+
+```sh
+$ ./mysqlbackup.sh -help 
+```
 
 #### Setting cron job:
 Linux Crontab Format
@@ -134,7 +141,7 @@ sudo chmod +x <fileName>
 * append below command at bottom of the file
 
 ```sh
-00 0 * * * /home/downloads/mysqlbinlog.sh
+00 0 * * * /home/downloads/mysqlbackup.sh
 ```
 
 * Save and exit.
